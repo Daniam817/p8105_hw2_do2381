@@ -1,0 +1,15 @@
+---
+title: "Homework 2"
+author: "Daniel Ojerant"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(readxl)
+```
+
+```{r}
+
+```
+
