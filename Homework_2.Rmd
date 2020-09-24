@@ -9,7 +9,56 @@ library(tidyverse)
 library(readxl)
 ```
 
-```{r}
 
+Read data
+```{r}
+trashwheel.df=
+  read_xlsx("/Users/danie/Documents/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/Trash-Wheel-Collection-Totals-8-6-19.xlsx", range = cell_cols("A:N")) %>% janitor::clean_names() %>% 
+  drop_na(dumpster) %>% 
+mutate(
+  sports_balls = round(sports_balls),
+  sports_balls = as.integer(sports_balls)
+)
 ```
+
+Read precipitation
+
+```{r}
+ precip.2018=
+  read_xlsx("/Users/danie/Documents/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
+  sheet = "2018 Precipitation",
+  skip = 1
+  ) %>% 
+  janitor::clean_names() %>% 
+  drop_na(month) %>% 
+  mutate(year = 2018) %>% 
+  relocate(year)
+  
+  precip.2017 =
+  read_xlsx("/Users/danie/Documents/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
+  sheet = "2017 Precipitation",
+  skip = 1
+  ) %>% 
+  janitor::clean_names() %>% 
+  drop_na(month) %>% 
+  mutate(year = 2017) %>% 
+  relocate(year)
+```
+
+Now combine annual precipitation
+```{r}
+month.df =
+  tibble(
+    month = 1:12,
+    month_name = month.name
+  )
+precip.df =
+  bind_rows(precip.2018,precip.2017)
+
+left_join(precip.df, month.df, by = "month")
+  
+```
+
+this dataset contains information from Mr.Trashwheel trash collector in Baltimore, Maryland. As treash enters the inner harbor, the trashwheel collects the trash, and stores it in a dumpster. The dataset contains information on year, month, and trash collected, include some specific kinds of trash. There are a total of `r nrow(trashwheel.df)` rows in our final dataset. Additional data sheets include month precipitation date
+
 
