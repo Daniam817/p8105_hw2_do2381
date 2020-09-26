@@ -76,27 +76,17 @@ Additional data sheets include month precipitation date
 
 ## Problem 2
 
-``` r
-NYC.df = 
-  read_csv("/Users/danie/Documents/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>% 
-  janitor::clean_names() %>% 
-  select(line:entrance_type, entry, vending, ada) %>% 
-  mutate(entry = recode(entry, "YES" = 1, "NO" = 0))
-```
+This data set is 1868 x 19 with variables including the line, station
+name, station latitude, station longitude, the 11 routes, the entrance
+type, the entry, vending, and ADA approval. I cleaned the dataset by
+only importing those following variables while also recoding the entry
+variable from character to logical.This data set is 1868 x 19. This data
+isn’t tidy because all the route variables can be represented as one
+single variable.
 
-    ## Parsed with column specification:
-    ## cols(
-    ##   .default = col_character(),
-    ##   `Station Latitude` = col_double(),
-    ##   `Station Longitude` = col_double(),
-    ##   Route8 = col_double(),
-    ##   Route9 = col_double(),
-    ##   Route10 = col_double(),
-    ##   Route11 = col_double(),
-    ##   ADA = col_logical(),
-    ##   `Free Crossover` = col_logical(),
-    ##   `Entrance Latitude` = col_double(),
-    ##   `Entrance Longitude` = col_double()
-    ## )
+There is a total number of 465 distinct stations.
 
-    ## See spec(...) for full column specifications.
+84 of the 465 distinct stations are ADA complaint.
+
+There are 60 distinct stations that serve on the A line which 17 are ADA
+complient
