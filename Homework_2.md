@@ -67,9 +67,36 @@ left_join(precip.df, month.df, by = "month")
     ## 10  2018    10  2.12 October   
     ## # ... with 14 more rows
 
-this dataset contains information from Mr.Trashwheel trash collector in
-Baltimore, Maryland. As treash enters the inner harbor, the trashwheel
+This dataset contains information from Mr.Trashwheel trash collector in
+Baltimore, Maryland. As trash enters the inner harbor, the trashwheel
 collects the trash, and stores it in a dumpster. The dataset contains
 information on year, month, and trash collected, include some specific
 kinds of trash. There are a total of 344 rows in our final dataset.
 Additional data sheets include month precipitation date
+
+## Problem 2
+
+``` r
+NYC.df = 
+  read_csv("/Users/danie/Documents/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>% 
+  janitor::clean_names() %>% 
+  select(line:entrance_type, entry, vending, ada) %>% 
+  mutate(entry = recode(entry, "YES" = 1, "NO" = 0))
+```
+
+    ## Parsed with column specification:
+    ## cols(
+    ##   .default = col_character(),
+    ##   `Station Latitude` = col_double(),
+    ##   `Station Longitude` = col_double(),
+    ##   Route8 = col_double(),
+    ##   Route9 = col_double(),
+    ##   Route10 = col_double(),
+    ##   Route11 = col_double(),
+    ##   ADA = col_logical(),
+    ##   `Free Crossover` = col_logical(),
+    ##   `Entrance Latitude` = col_double(),
+    ##   `Entrance Longitude` = col_double()
+    ## )
+
+    ## See spec(...) for full column specifications.
