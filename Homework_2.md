@@ -2,77 +2,13 @@ Homework 2
 ================
 Daniel Ojerant
 
-Read data
-
-``` r
-trashwheel.df=
-  read_xlsx("/Users/danie/Documents/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/Trash-Wheel-Collection-Totals-8-6-19.xlsx", range = cell_cols("A:N")) %>% janitor::clean_names() %>% 
-  drop_na(dumpster) %>% 
-mutate(
-  sports_balls = round(sports_balls),
-  sports_balls = as.integer(sports_balls)
-)
-```
-
-Read precipitation
-
-``` r
- precip.2018=
-  read_xlsx("/Users/danie/Documents/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
-  sheet = "2018 Precipitation",
-  skip = 1
-  ) %>% 
-  janitor::clean_names() %>% 
-  drop_na(month) %>% 
-  mutate(year = 2018) %>% 
-  relocate(year)
-  
-  precip.2017 =
-  read_xlsx("/Users/danie/Documents/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
-  sheet = "2017 Precipitation",
-  skip = 1
-  ) %>% 
-  janitor::clean_names() %>% 
-  drop_na(month) %>% 
-  mutate(year = 2017) %>% 
-  relocate(year)
-```
-
-Now combine annual precipitation
-
-``` r
-month.df =
-  tibble(
-    month = 1:12,
-    month_name = month.name
-  )
-precip.df =
-  bind_rows(precip.2018,precip.2017)
-
-left_join(precip.df, month.df, by = "month")
-```
-
-    ## # A tibble: 24 x 4
-    ##     year month total month_name
-    ##    <dbl> <dbl> <dbl> <chr>     
-    ##  1  2018     1  0.94 January   
-    ##  2  2018     2  4.8  February  
-    ##  3  2018     3  2.69 March     
-    ##  4  2018     4  4.69 April     
-    ##  5  2018     5  9.27 May       
-    ##  6  2018     6  4.77 June      
-    ##  7  2018     7 10.2  July      
-    ##  8  2018     8  6.45 August    
-    ##  9  2018     9 10.5  September 
-    ## 10  2018    10  2.12 October   
-    ## # ... with 14 more rows
+## Problem 1
 
 This dataset contains information from Mr.Trashwheel trash collector in
 Baltimore, Maryland. As trash enters the inner harbor, the trashwheel
 collects the trash, and stores it in a dumpster. The dataset contains
 information on year, month, and trash collected, include some specific
 kinds of trash. There are a total of 344 rows in our final dataset.
-Additional data sheets include month precipitation date
 
 ## Problem 2
 
@@ -86,7 +22,28 @@ single variable.
 
 There is a total number of 465 distinct stations.
 
-84 of the 465 distinct stations are ADA complaint.
+Of the 465 distinct stations, 84 are ADA complaint.
 
 There are 60 distinct stations that serve on the A line which 17 are ADA
-complient
+complaint.
+
+The proportion of station of entrances / exits that does not have
+vending is 759 / 2013
+
+## Problem 3
+
+The pols dataset has 822 rows and 9 columns. This dataset includes
+variables like the month, year and number of national politicians who
+are democratic or republican at every given year. The years range from
+1947-2015.
+
+The s\&p data has 787 rows and 3 columns. This dataset includes the
+variables year, month, and close. The years in this dataset range from
+1950-2015.
+
+The unemployment dataset has 816 rows and 3 columns. This dataset
+includes the variables year, month, and percent. The years in this
+dataset range from 1948-2015.
+
+The final merged datset has 822 rows and 11 columns. This dataset
+contains the data from all 3 datasets. ranging from 1947-2015.
