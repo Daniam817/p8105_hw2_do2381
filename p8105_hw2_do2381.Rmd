@@ -1,0 +1,184 @@
+---
+title: "p8105_hw2_do2381"
+author: "Daniel Ojerant"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(readxl)
+```
+
+
+## Problem 1
+```{r, include=FALSE}
+trashwheel.df=
+  read_xlsx("/Users/danie/Documents/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/Trash-Wheel-Collection-Totals-8-6-19.xlsx", range = cell_cols("A:N")) %>% janitor::clean_names() %>% 
+  drop_na(dumpster) %>% 
+mutate(
+  sports_balls = round(sports_balls),
+  sports_balls = as.integer(sports_balls)
+) 
+  
+```
+
+
+```{r, include=FALSE}
+ precip.2018=
+  read_xlsx("/Users/danie/Documents/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
+  sheet = "2018 Precipitation",
+  skip = 1
+  ) %>% 
+  janitor::clean_names() %>% 
+  drop_na(month) %>% 
+  mutate(year = 2018) %>% 
+  relocate(year)
+  
+  precip.2017 =
+  read_xlsx("/Users/danie/Documents/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
+  sheet = "2017 Precipitation",
+  skip = 1
+  ) %>% 
+  janitor::clean_names() %>% 
+  drop_na(month) %>% 
+  mutate(year = 2017) %>% 
+  relocate(year)
+```
+
+
+
+```{r, include=FALSE}
+month.df =
+  tibble(
+    month = 1:12,
+    month_name = month.name
+  )
+precip.df =
+  bind_rows(precip.2018,precip.2017)
+
+left_join(precip.df, month.df, by = "month")
+  
+```
+
+This dataset contains information from Mr.Trashwheel trash collector in Baltimore, Maryland. As trash enters the inner harbor, the trashwheel collects the trash, and stores it in a dumpster. The dataset contains information on year, month, and trash collected, include some specific kinds of trash. There are a total of `r nrow(trashwheel.df)` rows in our final dataset. 
+
+## Problem 2
+
+```{r, include=FALSE}
+NYC.df = 
+  read_csv("/Users/danie/Documents/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>% 
+  janitor::clean_names() %>% 
+  select(line:entrance_type, entry, vending, ada) %>% 
+  mutate(entry = recode(entry, "YES" = 1, "NO" = 0))
+```
+
+This data set is 1868 x 19  with variables including the line, station name, station latitude, station longitude, the 11 routes, the entrance type, the entry, vending, and ADA approval. I cleaned the dataset by only importing those following variables while also recoding the entry variable from character to logical.This data set is 1868 x 19. This data isn't tidy because all the route variables can be represented as one single variable.  
+
+```{r, include=FALSE}
+
+Distinct.NYC.df = distinct(NYC.df, line, station_name)
+```
+There is a total number of `r nrow(distinct(NYC.df, line, station_name))` distinct stations.
+
+```{r, include=FALSE}
+NYC1.df = 
+  filter(NYC.df, ada == "TRUE") %>% 
+  distinct(line, station_name)
+```
+Of the `r nrow(distinct(NYC.df, line, station_name))` distinct stations, `r nrow(distinct(NYC1.df, line, station_name))` are ADA complaint.
+
+
+```{r, include=FALSE}
+transit.df = 
+  read_csv("/Users/danie/Documents/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>% 
+  janitor::clean_names() %>% 
+  select(line:entrance_type, entry, vending, ada) %>% 
+  mutate(entry = recode(entry, "YES" = 1, "NO" = 0)) %>% 
+  mutate_at(vars(route8:route11), as.character) %>% 
+  pivot_longer(
+    route1:route11,
+    names_to = "route_number",
+    names_prefix = "route",
+    values_to = "route_name"
+  ) 
+
+```
+
+
+```{r,include=FALSE}
+A.Line = filter(transit.df, route_name == "A") %>% 
+  distinct(line, station_name)
+
+A.Line.ada = filter(transit.df, route_name == "A", ada == "TRUE") %>% 
+  distinct(line, station_name)
+```
+
+There are `r nrow(A.Line)` distinct stations that serve on the A line which `r nrow(A.Line.ada)` are ADA complaint.
+
+```{r, include = FALSE }
+entry.yes.df =
+  transit.df %>% 
+  filter(vending == "NO", entry == 1 ) %>% 
+  count()
+
+vending.no.df =
+   transit.df %>% 
+  filter(vending == "NO") %>% 
+  count()
+```
+
+The proportion of station of entrances / exits that does not have vending is `r entry.yes.df ` / `r vending.no.df `
+
+## Problem 3
+
+```{r, include=FALSE}
+pols.df = 
+  read_csv("/Users/danie/Documents/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/fivethirtyeight_datasets/pols-month.csv") %>% 
+  janitor::clean_names() %>%
+  separate(mon, c("year","month","day"), sep = "-") %>%
+  mutate(president = prez_gop + prez_dem, month = recode( month, "01" = "1","02" = "2","03" = "3","04" = "4","05" = "5","06" = "6","07" = "7","08" = "8","09" = "9")) %>% 
+  select( -prez_gop, -prez_dem, -day)
+  
+snp.df = 
+  read_csv("/Users/danie/Documents/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/fivethirtyeight_datasets/snp.csv") %>% 
+  janitor::clean_names() %>%
+  separate(date, c("month","day","year"), sep = "/") %>% 
+  select(-day) %>% 
+  relocate(year, month)
+
+unemployment.df = 
+  read_csv("/Users/danie/Documents/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/fivethirtyeight_datasets/unemployment.csv") %>% 
+  janitor::clean_names() %>%
+  mutate(year = as.character(year)) %>% 
+  pivot_longer(
+    jan:dec,
+    names_to = "month",
+    values_to = "percent"
+  ) %>% 
+ mutate(month = recode(month, "jan"="January","feb"="Febuary","mar"="March","apr"="April","may"="May","jun"="June","jul"="July","aug"="August","sep"="September","oct"="October","nov" ="November","dec"="December"))
+ 
+```
+The pols dataset has `r nrow(pols.df)` rows and `r ncol(pols.df)` columns. This dataset includes variables like the month, year and number of national politicians who are democratic or republican at every given year. The years range from 1947-2015.
+
+The s&p data has `r nrow(snp.df)` rows and `r ncol(snp.df)` columns. This dataset includes the variables year, month, and close.
+The years in this dataset range from 1950-2015.
+
+The unemployment dataset has `r nrow(unemployment.df)` rows and `r ncol(unemployment.df)` columns. This dataset includes the variables year, month, and percent. The years in this dataset range from 1948-2015.
+
+```{r, include=FALSE}
+bind.df =
+  left_join(pols.df, snp.df) %>% 
+  transform(month = as.numeric(month))
+
+ pols.snp.df = 
+   left_join(bind.df, month.df) %>% 
+   relocate(month_name) %>% 
+   select(-month, month = month_name) 
+   
+  pols.snp.unemployment.df = 
+   left_join(pols.snp.df, unemployment.df)
+```
+
+The final merged datset has `r nrow(pols.snp.unemployment.df)` rows and `r ncol(pols.snp.unemployment.df)` columns. This dataset contains the data from all 3 datasets. ranging from 1947-2015.
+
+
