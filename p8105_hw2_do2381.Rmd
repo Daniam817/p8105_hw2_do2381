@@ -13,7 +13,7 @@ library(readxl)
 ## Problem 1
 ```{r, include=FALSE}
 trashwheel.df=
-  read_xlsx("/Users/danie/Documents/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/Trash-Wheel-Collection-Totals-8-6-19.xlsx", range = cell_cols("A:N")) %>% janitor::clean_names() %>% 
+  read_xlsx("~/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/Trash-Wheel-Collection-Totals-8-6-19.xlsx", range = cell_cols("A:N")) %>% janitor::clean_names() %>% 
   drop_na(dumpster) %>% 
 mutate(
   sports_balls = round(sports_balls),
@@ -25,7 +25,7 @@ mutate(
 
 ```{r, include=FALSE}
  precip.2018=
-  read_xlsx("/Users/danie/Documents/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
+  read_xlsx("~/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
   sheet = "2018 Precipitation",
   skip = 1
   ) %>% 
@@ -35,7 +35,7 @@ mutate(
   relocate(year)
   
   precip.2017 =
-  read_xlsx("/Users/danie/Documents/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
+  read_xlsx("~/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/Trash-Wheel-Collection-Totals-8-6-19.xlsx",
   sheet = "2017 Precipitation",
   skip = 1
   ) %>% 
@@ -66,7 +66,7 @@ This dataset contains information from Mr.Trashwheel trash collector in Baltimor
 
 ```{r, include=FALSE}
 NYC.df = 
-  read_csv("/Users/danie/Documents/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>% 
+  read_csv("~/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>% 
   janitor::clean_names() %>% 
   select(line:entrance_type, entry, vending, ada) %>% 
   mutate(entry = recode(entry, "YES" = 1, "NO" = 0))
@@ -90,7 +90,7 @@ Of the `r nrow(distinct(NYC.df, line, station_name))` distinct stations, `r nrow
 
 ```{r, include=FALSE}
 transit.df = 
-  read_csv("/Users/danie/Documents/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>% 
+  read_csv("~/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/NYC_Transit_Subway_Entrance_And_Exit_Data.csv") %>% 
   janitor::clean_names() %>% 
   select(line:entrance_type, entry, vending, ada) %>% 
   mutate(entry = recode(entry, "YES" = 1, "NO" = 0)) %>% 
@@ -133,21 +133,21 @@ The proportion of station of entrances / exits that does not have vending is `r 
 
 ```{r, include=FALSE}
 pols.df = 
-  read_csv("/Users/danie/Documents/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/fivethirtyeight_datasets/pols-month.csv") %>% 
+  read_csv("~/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/fivethirtyeight_datasets/pols-month.csv") %>% 
   janitor::clean_names() %>%
   separate(mon, c("year","month","day"), sep = "-") %>%
   mutate(president = prez_gop + prez_dem, month = recode( month, "01" = "1","02" = "2","03" = "3","04" = "4","05" = "5","06" = "6","07" = "7","08" = "8","09" = "9")) %>% 
   select( -prez_gop, -prez_dem, -day)
   
 snp.df = 
-  read_csv("/Users/danie/Documents/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/fivethirtyeight_datasets/snp.csv") %>% 
+  read_csv("~/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/fivethirtyeight_datasets/snp.csv") %>% 
   janitor::clean_names() %>%
   separate(date, c("month","day","year"), sep = "/") %>% 
   select(-day) %>% 
   relocate(year, month)
 
 unemployment.df = 
-  read_csv("/Users/danie/Documents/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/fivethirtyeight_datasets/unemployment.csv") %>% 
+  read_csv("~/Columbia Semester 1 Files/Data Science  R Code/Data Wrangling/p8105_hw2_do2381/fivethirtyeight_datasets/unemployment.csv") %>% 
   janitor::clean_names() %>%
   mutate(year = as.character(year)) %>% 
   pivot_longer(
